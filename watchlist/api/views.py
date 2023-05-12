@@ -32,18 +32,20 @@ class ReviewCreate(generics.CreateAPIView):
         if review_query.exists():
             raise ValidationError("you have already reviewed this movie")
 
-        movie.rating = (movie.rating * movie.number_rating + serializer.validated_data['rating']) / (movie.number_rating + 1)
+        movie.rating = (movie.rating * movie.number_rating + serializer.validated_data['rating']) / (
+                    movie.number_rating + 1)
         movie.number_rating = movie.number_rating + 1
 
         movie.save()
 
-        serializer.save(watch=movie, review_user = user)
+        serializer.save(watch=movie, review_user=user)
 
 
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    #permission_classes = [IsAuthenticated]
+
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         pk = self.kwargs['pk']
@@ -54,8 +56,6 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [ReviewOrReadOnly]
-
-
 
 
 # class ReviewDetail(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
@@ -75,7 +75,6 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 #
 #
 class ReviewAllList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
